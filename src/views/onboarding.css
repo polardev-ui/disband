@@ -1,0 +1,45 @@
+.onboarding-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 26px 22px 24px;
+  border-radius: 28px;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent),
+    rgba(7, 7, 12, 0.96);
+  border: 1px solid rgba(120, 120, 150, 0.35);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.onboarding-card h2 {
+  margin: 0;
+}
+
+.onboarding-card p {
+  margin: 0;
+  color: #b5b5c3;
+}
+
+.onboarding-card input,
+.onboarding-card textarea {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(130, 130, 150, 0.7);
+  background: rgba(6, 6, 10, 0.9);
+  color: #f5f5f5;
+}
+
+.onboarding-card textarea {
+  min-height: 96px;
+  resize: vertical;
+}

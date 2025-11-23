@@ -1,0 +1,49 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  padding-bottom: 80px;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), rgba(10, 10, 18, 0.98));
+  border: 1px solid rgba(150, 150, 180, 0.4);
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
+  border-radius: 999px;
+  color: #d0d0dd;
+  text-decoration: none;
+  font-size: 11px;
+  gap: 2px;
+}
+
+.nav-item .icon {
+  font-size: 18px;
+}
+
+.nav-item.active {
+  background: rgba(245, 245, 245, 0.1);
+  color: #ffffff;
+}

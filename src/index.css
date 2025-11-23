@@ -1,0 +1,22 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #111 0, #000 55%, #050505 100%);
+  color: #f5f5f5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.view {
+  padding: 24px 20px 80px;
+}
