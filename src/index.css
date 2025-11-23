@@ -42,6 +42,10 @@ body {
   font-size: 13px;
 }
 
+.home-create-server {
+  margin-top: 8px;
+}
+
 .card-list {
   margin-top: 16px;
   display: flex;
@@ -170,6 +174,21 @@ body {
   margin-top: 10px;
   font-size: 13px;
   color: #c4c4d6;
+}
+
+.view-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.settings-button {
+  margin-top: 4px;
+}
+
+.settings-panel {
+  margin-top: 16px;
 }
 
 @keyframes fade-in {

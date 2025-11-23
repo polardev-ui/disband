@@ -13,6 +13,7 @@ interface ProfileRow {
 export function ProfileView() {
   const { session } = useAuthSession();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     if (!session) return;
@@ -29,34 +30,57 @@ export function ProfileView() {
 
   return (
     <div className="view view-animated">
-      <h1 className="view-title">Profile</h1>
-      <p className="view-subtitle">You, across Disband.</p>
+      <div className="view-header-row">
+        <div>
+          <h1 className="view-title">Profile</h1>
+          <p className="view-subtitle">You, across Disband.</p>
+        </div>
+        <button
+          type="button"
+          className="btn secondary small settings-button"
+          onClick={() => setShowSettings(s => !s)}
+        >
+          Settings
+        </button>
+      </div>
 
       {!profile ? (
         <p className="view-hint">Loading profile…</p>
       ) : (
-        <div className="profile-card fade-in">
-          <div className="profile-header">
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={profile.display_name || ''}
-                className="profile-avatar"
-              />
-            ) : (
-              <div className="profile-avatar fallback" />
-            )}
-            <div className="profile-main">
-              <div className="profile-name">
-                {profile.display_name || profile.username || 'User'}
-              </div>
-              {profile.username && (
-                <div className="profile-handle">@{profile.username}</div>
+        <>
+          <div className="profile-card fade-in">
+            <div className="profile-header">
+              {profile.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={profile.display_name || ''}
+                  className="profile-avatar"
+                />
+              ) : (
+                <div className="profile-avatar fallback" />
               )}
+              <div className="profile-main">
+                <div className="profile-name">
+                  {profile.display_name || profile.username || 'User'}
+                </div>
+                {profile.username && (
+                  <div className="profile-handle">@{profile.username}</div>
+                )}
+              </div>
             </div>
+            {profile.bio && <p className="profile-bio">{profile.bio}</p>}
           </div>
-          {profile.bio && <p className="profile-bio">{profile.bio}</p>}
-        </div>
+
+          {showSettings && (
+            <div className="profile-card fade-in settings-panel">
+              <h2 className="section-title">Settings</h2>
+              <h3 className="section-subtitle">Profile</h3>
+              <p className="view-hint">Profile editing will come here – name, avatar, bio.</p>
+              <h3 className="section-subtitle">App</h3>
+              <p className="view-hint">Theme, motion, and notification controls will live here.</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

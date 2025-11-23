@@ -8,19 +8,27 @@ interface FriendRow {
   username: string | null;
 }
 
-interface RequestRow {
+interface IncomingRequestRow {
   id: string;
   from_user: string;
   to_user: string;
   status: string;
-  from_profile?: { display_name: string | null; username: string | null };
+  from_profile_display_name: string | null;
+  from_profile_username: string | null;
+}
+
+interface OutgoingRequestRow {
+  id: string;
+  from_user: string;
+  to_user: string;
+  status: string;
 }
 
 export function FriendsView() {
   const { session } = useAuthSession();
   const [friends, setFriends] = useState<FriendRow[]>([]);
-  const [incoming, setIncoming] = useState<RequestRow[]>([]);
-  const [outgoing, setOutgoing] = useState<RequestRow[]>([]);
+  const [incoming, setIncoming] = useState<IncomingRequestRow[]>([]);
+  const [outgoing, setOutgoing] = useState<OutgoingRequestRow[]>([]);
   const [usernameQuery, setUsernameQuery] = useState('');
   const [message, setMessage] = useState<string | null>(null);
 
@@ -39,13 +47,13 @@ export function FriendsView() {
         'get_incoming_friend_requests',
         { p_user_id: session.user.id },
       );
-      setIncoming((incomingData as RequestRow[]) || []);
+      setIncoming((incomingData as IncomingRequestRow[]) || []);
 
       const { data: outgoingData } = await supabase.rpc(
         'get_outgoing_friend_requests',
         { p_user_id: session.user.id },
       );
-      setOutgoing((outgoingData as RequestRow[]) || []);
+      setOutgoing((outgoingData as OutgoingRequestRow[]) || []);
     };
 
     load();
@@ -107,7 +115,11 @@ export function FriendsView() {
             placeholder="friendname"
           />
         </div>
-        <button type="submit" className="btn primary fill" disabled={!usernameQuery.trim()}>
+        <button
+          type="submit"
+          className="btn primary fill friend-submit"
+          disabled={!usernameQuery.trim()}
+        >
           Send request
         </button>
         {message && <p className="view-hint">{message}</p>}
@@ -142,7 +154,7 @@ export function FriendsView() {
                   <div key={r.id} className="card-item fade-in">
                     <div className="card-main">
                       <div className="card-title">
-                        {r.from_profile?.display_name || r.from_profile?.username || 'User'}
+                        {r.from_profile_display_name || r.from_profile_username || 'User'}
                       </div>
                     </div>
                     <div className="card-meta card-actions">
