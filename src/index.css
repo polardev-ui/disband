@@ -20,3 +20,174 @@ body {
 .view {
   padding: 24px 20px 80px;
 }
+
+.view-animated {
+  animation: page-fade-slide 260ms ease-out;
+}
+
+.view-title {
+  margin: 0 0 4px;
+  font-size: 26px;
+}
+
+.view-subtitle {
+  margin: 0 0 16px;
+  color: #b5b5c3;
+  font-size: 14px;
+}
+
+.view-hint {
+  margin-top: 12px;
+  color: #8c8ca0;
+  font-size: 13px;
+}
+
+.card-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-item {
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent),
+    rgba(7, 7, 12, 0.96);
+  border: 1px solid rgba(120, 120, 150, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  animation: fade-in 220ms ease-out;
+}
+
+.card-main {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 15px;
+}
+
+.card-body {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #b5b5c3;
+}
+
+.card-meta {
+  font-size: 11px;
+  color: #8f8fa4;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn.small {
+  padding: 8px 12px;
+  font-size: 11px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+
+.chip {
+  border-radius: 999px;
+  border: 1px solid rgba(130, 130, 150, 0.7);
+  padding: 6px 12px;
+  font-size: 12px;
+  background: rgba(10, 10, 18, 0.96);
+  color: #d5d5e5;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.08s ease, box-shadow 0.18s ease;
+}
+
+.chip-selected {
+  background: #f5f5f5;
+  color: #050505;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.85);
+}
+
+.chip:active {
+  transform: scale(0.96) translateY(1px);
+}
+
+.section-title {
+  margin: 24px 0 4px;
+  font-size: 16px;
+}
+
+.section-subtitle {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  color: #a0a0b5;
+}
+
+.profile-card {
+  margin-top: 18px;
+  padding: 16px 14px 18px;
+  border-radius: 22px;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent),
+    rgba(7, 7, 12, 0.96);
+  border: 1px solid rgba(120, 120, 150, 0.35);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-avatar.fallback {
+  background: linear-gradient(135deg, #333348, #191927);
+}
+
+.profile-name {
+  font-size: 17px;
+}
+
+.profile-handle {
+  margin-top: 2px;
+  font-size: 13px;
+  color: #a0a0b5;
+}
+
+.profile-bio {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #c4c4d6;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-fade-slide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
