@@ -12,36 +12,14 @@ export function OnboardingFlow() {
   const [error, setError] = useState<string | null>(null);
 
   const handleUsernameNext = async () => {
-    console.log('[Onboarding] handleUsernameNext fired with', username);
-    setLoading(true);
-    setError(null);
-    try {
-      const trimmed = username.trim().toLowerCase();
-      if (!trimmed) {
-        console.log('[Onboarding] Empty username, aborting');
-        setError('Pick a username first');
-        return;
-      }
-
-      const { count, error } = await supabase
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .eq('username', trimmed);
-
-      console.log('[Onboarding] Supabase username check result', { count, error });
-
-      if (error) throw error;
-      if ((count ?? 0) > 0) {
-        setError('Username is taken');
-      } else {
-        setStep(1);
-      }
-    } catch (err: any) {
-      console.error('[Onboarding] username check failed', err);
-      setError(err.message ?? 'Could not check username');
-    } finally {
-      setLoading(false);
+    const trimmed = username.trim().toLowerCase();
+    if (!trimmed) {
+      setError('Pick a username first');
+      return;
     }
+    setUsername(trimmed);
+    setError(null);
+    setStep(1);
   };
 
   const finishOnboarding = async () => {
@@ -84,7 +62,15 @@ export function OnboardingFlow() {
         avatar_url: avatarUrl,
         onboarding_complete: true,
       });
-      if (error) throw error;
+      if (error) {
+        // Handle unique username collisions gracefully.
+        if ((error as any).code === '23505') {
+          setStep(0);
+          setError('That username is already taken. Try another one.');
+          return;
+        }
+        throw error;
+      }
       // Let AuthSessionProvider pick up the updated onboarding flag via auth state.
       await supabase.auth.refreshSession();
     } catch (err: any) {
