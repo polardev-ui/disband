@@ -15,13 +15,12 @@ export function OnboardingFlow() {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from('profiles')
-        .select('id')
-        .eq('username', username)
-        .maybeSingle();
+        .select('id', { count: 'exact', head: true })
+        .eq('username', username);
       if (error) throw error;
-      if (data) {
+      if ((count ?? 0) > 0) {
         setError('Username is taken');
       } else {
         setStep(1);
