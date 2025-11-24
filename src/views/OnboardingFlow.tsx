@@ -35,23 +35,36 @@ export function OnboardingFlow() {
 
       let avatarUrl: string | null = null;
       if (avatarFile) {
-        const formData = new FormData();
-        formData.append('file', avatarFile);
+        try {
+          const formData = new FormData();
+          formData.append('file', avatarFile);
 
-        const response = await fetch('https://api.wsgpolar.me/v1/images', {
-          method: 'POST',
-          body: formData,
-        });
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-        if (!response.ok) {
-          throw new Error('Failed to upload avatar');
+          const response = await fetch('https://api.wsgpolar.me/v1/images', {
+            method: 'POST',
+            body: formData,
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            const payload = (await response.json()) as {
+              url?: string;
+              success?: boolean;
+              message?: string;
+            };
+            if (payload.url) {
+              avatarUrl = payload.url;
+            }
+          } else {
+            console.warn('Avatar upload failed', await response.text());
+          }
+        } catch (err) {
+          console.warn('Avatar upload error (ignored)', err);
         }
-
-        const payload = (await response.json()) as { url?: string; success?: boolean; message?: string };
-        if (!payload.url) {
-          throw new Error(payload.message || 'Image API did not return a URL');
-        }
-        avatarUrl = payload.url;
       }
 
       const { error } = await supabase.from('profiles').upsert({
@@ -102,11 +115,12 @@ export function OnboardingFlow() {
             <button onClick={handleUsernameNext} disabled={!username || loading} className="btn primary fill">
               {loading ? 'Checking…' : 'Continue'}
             </button>
-          </div>
+                setError(error.message ?? 'Could not save your profile.');
+                return;
         )}
 
-        {step === 1 && (
-          <div className="onboarding-step fade-in">
+              // Profile saved; jump into the app.
+              window.location.href = '/';
             <h2>Display name</h2>
             <p>What should we call you?</p>
             <div className="field-group">
