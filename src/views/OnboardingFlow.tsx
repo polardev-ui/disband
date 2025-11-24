@@ -12,13 +12,24 @@ export function OnboardingFlow() {
   const [error, setError] = useState<string | null>(null);
 
   const handleUsernameNext = async () => {
+    console.log('[Onboarding] handleUsernameNext fired with', username);
     setLoading(true);
     setError(null);
     try {
+      const trimmed = username.trim().toLowerCase();
+      if (!trimmed) {
+        console.log('[Onboarding] Empty username, aborting');
+        setError('Pick a username first');
+        return;
+      }
+
       const { count, error } = await supabase
         .from('profiles')
         .select('id', { count: 'exact', head: true })
-        .eq('username', username);
+        .eq('username', trimmed);
+
+      console.log('[Onboarding] Supabase username check result', { count, error });
+
       if (error) throw error;
       if ((count ?? 0) > 0) {
         setError('Username is taken');
@@ -26,6 +37,7 @@ export function OnboardingFlow() {
         setStep(1);
       }
     } catch (err: any) {
+      console.error('[Onboarding] username check failed', err);
       setError(err.message ?? 'Could not check username');
     } finally {
       setLoading(false);
