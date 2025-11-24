@@ -166,7 +166,12 @@ export function HomeView() {
       ) : (
         <div className="card-list">
           {threads.map(t => (
-            <div key={t.id} className="card-item fade-in">
+            <button
+              key={t.id}
+              type="button"
+              className="card-item fade-in friend-row-button"
+              onClick={() => navigate(`/dm/${t.id}`)}
+            >
               <div className="card-main">
                 <div className="card-title">{t.other_display_name}</div>
                 {t.last_message && <div className="card-body">{t.last_message}</div>}
@@ -174,7 +179,7 @@ export function HomeView() {
               {t.last_timestamp && (
                 <div className="card-meta">{new Date(t.last_timestamp).toLocaleTimeString()}</div>
               )}
-            </div>
+            </button>
           ))}
         </div>
       )}

@@ -1,0 +1,48 @@
+.dm-view {
+  padding-bottom: 84px;
+}
+
+.dm-messages {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dm-bubble {
+  max-width: 80%;
+  padding: 9px 12px;
+  border-radius: 18px;
+  font-size: 14px;
+}
+
+.dm-bubble-mine {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #5e7bff, #9b6bff);
+  color: #ffffff;
+}
+
+.dm-bubble-theirs {
+  align-self: flex-start;
+  background: rgba(20, 20, 32, 0.96);
+  border: 1px solid rgba(160, 160, 200, 0.5);
+}
+
+.dm-input-row {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 18px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dm-input-row input {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 150, 190, 0.7);
+  background: rgba(10, 10, 20, 0.98);
+  padding: 9px 12px;
+  color: #f5f5ff;
+}

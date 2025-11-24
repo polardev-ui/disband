@@ -23,8 +23,22 @@ export function AuthForm() {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+
+        // If the user already completed onboarding, skip straight into the app.
+        if (data.session) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('onboarding_complete')
+            .eq('id', data.session.user.id)
+            .maybeSingle();
+
+          if (profile && profile.onboarding_complete) {
+            navigate('/');
+            return;
+          }
+        }
       }
       navigate('/onboarding');
     } catch (err: any) {
