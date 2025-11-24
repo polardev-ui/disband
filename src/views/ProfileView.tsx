@@ -51,6 +51,16 @@ export function ProfileView() {
           <p className="view-subtitle">You, across Disband.</p>
         </div>
         <div className="profile-header-actions">
+            <button
+              type="button"
+              className="btn secondary small"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate('/');
+              }}
+            >
+              Log out
+            </button>
           <button
             type="button"
             className="btn secondary small"

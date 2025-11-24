@@ -5,6 +5,7 @@ import { FriendsView } from './FriendsView';
 import { ProfileView } from './ProfileView';
 import { SettingsView } from './SettingsView';
 import { DmView } from './DmView';
+import { LogoutView } from './LogoutView';
 import './shell.css';
 
 export function MainShell() {
@@ -21,6 +22,7 @@ export function MainShell() {
           <Route path="/profile" element={<ProfileView />} />
           <Route path="/settings" element={<SettingsView />} />
           <Route path="/dm/:threadId" element={<DmView />} />
+          <Route path="/logout" element={<LogoutView />} />
         </Routes>
         <Outlet />
       </div>
