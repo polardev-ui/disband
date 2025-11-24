@@ -137,55 +137,30 @@ export function OnboardingFlow() {
               onClick={() => setStep(2)}
               disabled={!displayName}
               className="btn primary fill"
-            >
-              Continue
-            </button>
-          </div>
-        )}
+                const {
+                  data: { session },
+                  error: sessionError,
+                } = await supabase.auth.getSession();
+                if (sessionError) throw sessionError;
+                if (!session) throw new Error('No active session – please log in again.');
 
-        {step === 2 && (
-          <div className="onboarding-step fade-in">
-            <h2>Profile picture</h2>
-            <p>Optional, you can change this later.</p>
-            <label className="avatar-upload">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={e => setAvatarFile(e.target.files?.[0] ?? null)}
-              />
-              <span>{avatarFile ? avatarFile.name : 'Tap to choose an image'}</span>
-            </label>
-            <button onClick={() => setStep(3)} className="btn primary fill">
-              Continue
-            </button>
-          </div>
-        )}
+                const { error } = await supabase.from('profiles').upsert({
+                  id: session.user.id,
+                  username,
+                  display_name: displayName,
+                  bio,
+                  avatar_url: null,
+                  onboarding_complete: true,
+                });
+                if (error) {
+                  if ((error as any).code === '23505') {
+                    setStep(0);
+                    setError('That username is already taken. Try another one.');
+                    return;
+                  }
+                  setError(error.message ?? 'Could not save your profile.');
+                  return;
+                }
 
-        {step === 3 && (
-          <div className="onboarding-step fade-in">
+                window.location.href = '/';
             <h2>Bio</h2>
-            <p>Tell others a bit about you (optional).</p>
-            <div className="field-group">
-              <label className="field-label">Bio</label>
-              <div className="field-shell textarea-shell">
-                <textarea
-                  value={bio}
-                  onChange={e => setBio(e.target.value)}
-                  placeholder="Dreaming among the stars."
-                />
-              </div>
-            </div>
-            {error && <p className="error-text">{error}</p>}
-            <button
-              onClick={finishOnboarding}
-              disabled={loading || !username || !displayName}
-              className="btn primary fill"
-            >
-              {loading ? 'Preparing your space…' : 'Finish'}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
