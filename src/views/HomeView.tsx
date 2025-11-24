@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuthSession } from '../supabase/AuthSessionProvider';
 
@@ -10,12 +11,15 @@ interface SimpleThread {
 }
 
 export function HomeView() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { session } = useAuthSession();
   const [threads, setThreads] = useState<SimpleThread[]>([]);
   const [loading, setLoading] = useState(true);
   const [serverName, setServerName] = useState('');
   const [serverDescription, setServerDescription] = useState('');
   const [serverMessage, setServerMessage] = useState<string | null>(null);
+  const [showComposer, setShowComposer] = useState(false);
 
   useEffect(() => {
     if (!session) return;
@@ -33,6 +37,12 @@ export function HomeView() {
 
     load();
   }, [session]);
+
+  useEffect(() => {
+    if ((location.state as any)?.showComposer) {
+      setShowComposer(true);
+    }
+  }, [location.state]);
 
   const handleCreateServer = async (e: FormEvent) => {
     e.preventDefault();
@@ -69,6 +79,48 @@ export function HomeView() {
     <div className="view view-animated">
       <h1 className="view-title">Home</h1>
       <p className="view-subtitle">Create spaces and continue your conversations.</p>
+
+      {showComposer && (
+        <div className="composer-overlay">
+          <div className="composer-card">
+            <h2 className="section-title">Start something new</h2>
+            <p className="view-subtitle">Choose what you want to create.</p>
+            <div className="composer-actions">
+              <button
+                type="button"
+                className="btn primary fill"
+                onClick={() => {
+                  setShowComposer(false);
+                  // Scroll to the create-server card for now
+                  const el = document.querySelector('.home-create-server');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+              >
+                Create server
+              </button>
+              <button
+                type="button"
+                className="btn secondary fill"
+                onClick={() => {
+                  setShowComposer(false);
+                  navigate('/friends', { state: { startDm: true } });
+                }}
+              >
+                New DM
+              </button>
+              <button
+                type="button"
+                className="btn secondary small"
+                onClick={() => setShowComposer(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <form className="card-item home-create-server" onSubmit={handleCreateServer}>
         <div className="card-main">

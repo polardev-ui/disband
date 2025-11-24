@@ -10,7 +10,7 @@ export function AuthLanding() {
       </div>
       <div className="auth-content">
         <div className="logo-stack">
-          <img src="/images/logo.png" alt="Disband" className="logo" />
+        <img src="/images/logo.png" alt="Disband" className="logo" />
           <h1 className="app-name">Disband</h1>
           <p className="tagline">Establishing secure ways to communicate.</p>
           <p className="byline">Designed by Aethera Intelligence</p>

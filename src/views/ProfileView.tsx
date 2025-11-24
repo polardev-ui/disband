@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuthSession } from '../supabase/AuthSessionProvider';
 
@@ -13,7 +14,9 @@ interface ProfileRow {
 export function ProfileView() {
   const { session } = useAuthSession();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
-  const [showSettings, setShowSettings] = useState(false);
+  const [friendCount, setFriendCount] = useState<number | null>(null);
+  const [serverCount, setServerCount] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!session) return;
@@ -24,6 +27,18 @@ export function ProfileView() {
         .eq('id', session.user.id)
         .maybeSingle();
       setProfile((data as ProfileRow) || null);
+
+      const { count: friends } = await supabase
+        .from('friendships')
+        .select('*', { count: 'exact', head: true })
+        .or(`user_a.eq.${session.user.id},user_b.eq.${session.user.id}`);
+      setFriendCount(friends ?? null);
+
+      const { count: servers } = await supabase
+        .from('server_members')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', session.user.id);
+      setServerCount(servers ?? null);
     };
     load();
   }, [session]);
@@ -35,13 +50,15 @@ export function ProfileView() {
           <h1 className="view-title">Profile</h1>
           <p className="view-subtitle">You, across Disband.</p>
         </div>
-        <button
-          type="button"
-          className="btn secondary small settings-button"
-          onClick={() => setShowSettings(s => !s)}
-        >
-          Settings
-        </button>
+        <div className="profile-header-actions">
+          <button
+            type="button"
+            className="btn secondary small"
+            onClick={() => navigate('/settings')}
+          >
+            Settings
+          </button>
+        </div>
       </div>
 
       {!profile ? (
@@ -69,17 +86,26 @@ export function ProfileView() {
               </div>
             </div>
             {profile.bio && <p className="profile-bio">{profile.bio}</p>}
-          </div>
-
-          {showSettings && (
-            <div className="profile-card fade-in settings-panel">
-              <h2 className="section-title">Settings</h2>
-              <h3 className="section-subtitle">Profile</h3>
-              <p className="view-hint">Profile editing will come here – name, avatar, bio.</p>
-              <h3 className="section-subtitle">App</h3>
-              <p className="view-hint">Theme, motion, and notification controls will live here.</p>
+            <div className="profile-stats-row">
+              {friendCount !== null && (
+                <div className="profile-stat">
+                  <div className="profile-stat-number">{friendCount}</div>
+                  <div className="profile-stat-label">Friends</div>
+                </div>
+              )}
+              {serverCount !== null && (
+                <div className="profile-stat">
+                  <div className="profile-stat-number">{serverCount}</div>
+                  <div className="profile-stat-label">Servers</div>
+                </div>
+              )}
             </div>
-          )}
+            <div className="profile-actions-row">
+              <button type="button" className="btn primary small">
+                Customize
+              </button>
+            </div>
+          </div>
         </>
       )}
     </div>

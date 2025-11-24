@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { Session } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
 
 interface AuthContextValue {
@@ -35,8 +35,23 @@ export const AuthSessionProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     getInitialSession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
       setSession(session);
+
+      if (!session) {
+        setOnboardingComplete(false);
+        return;
+      }
+
+      // After a sign-in or token refresh, re-check onboarding flag to avoid stale redirects.
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        const { data } = await supabase
+          .from('profiles')
+          .select('onboarding_complete')
+          .eq('id', session.user.id)
+          .maybeSingle();
+        setOnboardingComplete(Boolean(data?.onboarding_complete));
+      }
     });
 
     return () => {

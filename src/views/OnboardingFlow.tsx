@@ -39,8 +39,10 @@ export function OnboardingFlow() {
     try {
       const {
         data: { session },
+        error: sessionError,
       } = await supabase.auth.getSession();
-      if (!session) throw new Error('No session');
+      if (sessionError) throw sessionError;
+      if (!session) throw new Error('No active session – please log in again.');
 
       let avatarUrl: string | null = null;
       if (avatarFile) {
@@ -56,8 +58,11 @@ export function OnboardingFlow() {
           throw new Error('Failed to upload avatar');
         }
 
-        const payload = (await response.json()) as { url?: string };
-        avatarUrl = payload.url ?? null;
+        const payload = (await response.json()) as { url?: string; success?: boolean; message?: string };
+        if (!payload.url) {
+          throw new Error(payload.message || 'Image API did not return a URL');
+        }
+        avatarUrl = payload.url;
       }
 
       const { error } = await supabase.from('profiles').upsert({
@@ -69,8 +74,8 @@ export function OnboardingFlow() {
         onboarding_complete: true,
       });
       if (error) throw error;
-
-      window.location.href = '/';
+      // Let AuthSessionProvider pick up the updated onboarding flag via auth state.
+      await supabase.auth.refreshSession();
     } catch (err: any) {
       setError(err.message ?? 'Could not finish onboarding');
     } finally {

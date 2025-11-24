@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuthSession } from '../supabase/AuthSessionProvider';
 
@@ -26,11 +27,13 @@ interface OutgoingRequestRow {
 
 export function FriendsView() {
   const { session } = useAuthSession();
+  const location = useLocation();
   const [friends, setFriends] = useState<FriendRow[]>([]);
   const [incoming, setIncoming] = useState<IncomingRequestRow[]>([]);
   const [outgoing, setOutgoing] = useState<OutgoingRequestRow[]>([]);
   const [usernameQuery, setUsernameQuery] = useState('');
   const [message, setMessage] = useState<string | null>(null);
+  const [startDmMode, setStartDmMode] = useState(false);
 
   useEffect(() => {
     if (!session) return;
@@ -58,6 +61,12 @@ export function FriendsView() {
 
     load();
   }, [session]);
+
+  useEffect(() => {
+    if ((location.state as any)?.startDm) {
+      setStartDmMode(true);
+    }
+  }, [location.state]);
 
   const handleAddFriend = async (e: FormEvent) => {
     e.preventDefault();
@@ -87,6 +96,37 @@ export function FriendsView() {
     }
   };
 
+  const handleStartDmWith = async (friendId: string) => {
+    if (!session) return;
+
+    // For now, create a new DM thread with the chosen friend if one doesn't exist.
+    const { data: existing } = await supabase
+      .from('dm_threads')
+      .select('id, dm_participants!inner(user_id)')
+      .eq('dm_participants.user_id', session.user.id)
+      .eq('dm_participants.user_id', friendId)
+      .maybeSingle();
+
+    let threadId = (existing as any)?.id as string | undefined;
+
+    if (!threadId) {
+      const { data, error } = await supabase
+        .from('dm_threads')
+        .insert({})
+        .select('id')
+        .maybeSingle();
+      if (error || !data) return;
+      threadId = data.id;
+
+      await supabase.from('dm_participants').insert([
+        { thread_id: threadId, user_id: session.user.id },
+        { thread_id: threadId, user_id: friendId },
+      ]);
+    }
+
+    // A future DM view could navigate to `/dm/${threadId}`.
+  };
+
   const handleRespond = async (id: string, accept: boolean) => {
     if (!session) return;
     const status = accept ? 'accepted' : 'declined';
@@ -103,9 +143,12 @@ export function FriendsView() {
   return (
     <div className="view view-animated">
       <h1 className="view-title">Friends</h1>
-      <p className="view-subtitle">Add friends and manage requests.</p>
+      <p className="view-subtitle">
+        {startDmMode ? 'Pick a friend to start a DM.' : 'Add friends and manage requests.'}
+      </p>
 
-      <form className="field-group" onSubmit={handleAddFriend}>
+      {!startDmMode && (
+        <form className="field-group" onSubmit={handleAddFriend}>
         <label className="field-label">Add friend by username</label>
         <div className="field-shell">
           <span className="field-prefix">@</span>
@@ -122,8 +165,9 @@ export function FriendsView() {
         >
           Send request
         </button>
-        {message && <p className="view-hint">{message}</p>}
-      </form>
+          {message && <p className="view-hint">{message}</p>}
+        </form>
+      )}
 
       <h2 className="section-title">Friends</h2>
       {friends.length === 0 ? (
@@ -131,12 +175,17 @@ export function FriendsView() {
       ) : (
         <div className="card-list">
           {friends.map(f => (
-            <div key={f.id} className="card-item fade-in">
+            <button
+              key={f.id}
+              className="card-item fade-in friend-row-button"
+              type="button"
+              onClick={startDmMode ? () => handleStartDmWith(f.id) : undefined}
+            >
               <div className="card-main">
                 <div className="card-title">{f.display_name || f.username}</div>
                 {f.username && <div className="card-body">@{f.username}</div>}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}
