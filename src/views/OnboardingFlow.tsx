@@ -17,7 +17,7 @@ export function OnboardingFlow() {
   const [error, setError] = useState<string | null>(null)
 
   const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "taken">("idle")
-  const [usernameCheckTimeout, setUsernameCheckTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [usernameCheckTimeout, setUsernameCheckTimeout] = useState<number | null>(null)
 
   useEffect(() => {
     if (usernameCheckTimeout) {
