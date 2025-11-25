@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import './auth.css';
+import { Link } from "react-router-dom"
+import "./auth.css"
 
 export function AuthLanding() {
   return (
@@ -10,7 +10,9 @@ export function AuthLanding() {
       </div>
       <div className="auth-content">
         <div className="logo-stack">
-        <img src="/images/logo.png" alt="Disband" className="logo" />
+          <div className="logo-container">
+            <img src="/images/logo.png" alt="Disband" className="logo" />
+          </div>
           <h1 className="app-name">Disband</h1>
           <p className="tagline">Establishing secure ways to communicate.</p>
           <p className="byline">Designed by Aethera Intelligence</p>
@@ -25,5 +27,5 @@ export function AuthLanding() {
         </div>
       </div>
     </div>
-  );
+  )
 }

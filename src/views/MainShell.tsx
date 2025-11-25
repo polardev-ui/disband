@@ -1,16 +1,18 @@
-import { NavLink, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { HomeView } from './HomeView';
-import { DiscoverView } from './DiscoverView';
-import { FriendsView } from './FriendsView';
-import { ProfileView } from './ProfileView';
-import { SettingsView } from './SettingsView';
-import { DmView } from './DmView';
-import { LogoutView } from './LogoutView';
-import './shell.css';
+"use client"
+
+import { NavLink, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom"
+import { HomeView } from "./HomeView"
+import { DiscoverView } from "./DiscoverView"
+import { FriendsView } from "./FriendsView"
+import { ProfileView } from "./ProfileView"
+import { SettingsView } from "./SettingsView"
+import { DmView } from "./DmView"
+import { LogoutView } from "./LogoutView"
+import "./shell.css"
 
 export function MainShell() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   return (
     <div className="app-shell">
@@ -29,29 +31,29 @@ export function MainShell() {
       <button
         type="button"
         className="home-plus-button"
-        onClick={() => navigate('/', { state: { showComposer: true } })}
+        onClick={() => navigate("/", { state: { showComposer: true } })}
       >
         <img src="/icons/plus.png" alt="New" />
       </button>
       <nav className="bottom-nav">
-        <div className="nav-droplet" />
-        <NavLink to="/" className="nav-item">
+        <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
           <img src="/icons/home.png" alt="Home" className="nav-icon" />
           <span className="label">Home</span>
         </NavLink>
-        <NavLink to="/discover" className="nav-item">
+        <NavLink to="/discover" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
           <img src="/icons/discover.png" alt="Discover" className="nav-icon" />
           <span className="label">Discover</span>
         </NavLink>
-        <NavLink to="/friends" className="nav-item">
+        <NavLink to="/friends" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
           <img src="/icons/friends.png" alt="Friends" className="nav-icon" />
           <span className="label">Friends</span>
         </NavLink>
-        <NavLink to="/profile" className="nav-item">
+        <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
           <img src="/icons/profile.png" alt="Profile" className="nav-icon" />
           <span className="label">Profile</span>
         </NavLink>
+        <div className="nav-droplet" />
       </nav>
     </div>
-  );
+  )
 }

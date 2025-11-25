@@ -27,8 +27,10 @@
   gap: 6px;
   backdrop-filter: blur(18px);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95);
+  position: relative;
 }
 
+/* Fixed and updated plus button with inverted icon colors */
 .home-plus-button {
   position: fixed;
   top: 20px;
@@ -44,99 +46,95 @@
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
   padding: 0;
   overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.home-plus-button:active {
+  transform: scale(0.94) translateY(1px);
+}
 
 .home-plus-button img {
   width: 18px;
   height: 18px;
+  filter: invert(1);
+  opacity: 0.9;
 }
 
+/* Added rounded selectors for active nav items */
 .nav-item {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 0;
-  border-radius: 999px;
+  padding: 8px 0;
+  border-radius: 16px;
   color: #d0d0dd;
   text-decoration: none;
   font-size: 11px;
-  gap: 2px;
-}
-
-.nav-item .icon {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1.25px solid rgba(255, 255, 255, 0.8);
+  gap: 4px;
   position: relative;
+  z-index: 2;
+  transition: all 0.18s ease;
 }
 
-.icon-home::before,
-.icon-discover::before,
-.icon-friends::before,
-  width: 18px;
-  height: 18px;
-}
-.icon-profile::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: inherit;
-  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.2));
+.nav-item .label {
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0.7;
+  transition: opacity 0.18s ease;
 }
 
-.icon-discover::before {
-  background: conic-gradient(from 140deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.95));
+.nav-item.active .label {
+  opacity: 1;
+  color: #ffffff;
 }
 
-.icon-friends::before {
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.2));
+/* Inverted icon colors and updated styling */
+.nav-item img.nav-icon {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+  opacity: 0.7;
+  transition: all 0.18s ease;
+}
+
+.nav-item.active img.nav-icon {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* Updated nav droplet to work with rounded selectors */
 .nav-droplet {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(25% - 8px);
-  height: calc(100% - 8px);
-  border-radius: 999px;
-  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.04));
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 18px 45px rgba(0, 0, 0, 0.9);
+  top: 8px;
+  left: 12px;
+  width: calc(25% - 12px);
+  height: calc(100% - 16px);
+  border-radius: 14px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(14px);
   transition: transform 260ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
   pointer-events: none;
+  z-index: 1;
 }
 
-.bottom-nav .nav-item:nth-of-type(2).active ~ .nav-droplet {
+.bottom-nav .nav-item:nth-of-type(1).active ~ .nav-droplet {
   transform: translateX(0%);
 }
 
+.bottom-nav .nav-item:nth-of-type(2).active ~ .nav-droplet {
+  transform: translateX(calc(100% + 6px));
+}
+
 .bottom-nav .nav-item:nth-of-type(3).active ~ .nav-droplet {
-  transform: translateX(100%);
+  transform: translateX(calc(200% + 12px));
 }
 
 .bottom-nav .nav-item:nth-of-type(4).active ~ .nav-droplet {
-  transform: translateX(200%);
-}
-
-.bottom-nav .nav-item:nth-of-type(5).active ~ .nav-droplet {
-  transform: translateX(300%);
-}
-}
-
-.icon-profile::before {
-  background: radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.2));
-}
-
-.nav-item.active {
-  background: rgba(245, 245, 245, 0.1);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
-}
-
-.nav-item,
-.nav-item .icon {
-  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transform: translateX(calc(300% + 18px));
 }
 
 @keyframes page-fade-slide {

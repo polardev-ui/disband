@@ -1,5 +1,5 @@
 .settings-group {
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .settings-label {
@@ -7,7 +7,15 @@
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: #70708a;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.settings-section-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #b5b5c3;
+  margin: 16px 0 10px;
 }
 
 .settings-row {
@@ -15,30 +23,198 @@
   border: none;
   background: rgba(15, 15, 25, 0.96);
   border-radius: 18px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+  margin-bottom: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
-.settings-row:active {
-  transform: scale(0.98);
+.settings-row:hover:not(:disabled) {
+  background: rgba(20, 20, 32, 0.98);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85);
+}
+
+.settings-row:active:not(:disabled) {
+  transform: scale(0.98) translateY(1px);
+}
+
+.settings-row:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .settings-main {
   display: flex;
   flex-direction: column;
+  gap: 3px;
 }
 
 .settings-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
+  color: #f5f5f5;
 }
 
 .settings-subtitle {
-  margin-top: 2px;
   font-size: 12px;
   color: #9292af;
+}
+
+.settings-arrow {
+  font-size: 18px;
+  color: #9292af;
+  transition: transform 0.18s ease;
+}
+
+.settings-row:hover .settings-arrow {
+  transform: translateX(3px);
+}
+
+/* Added theme and accent customization UI */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.theme-option {
+  background: rgba(15, 15, 25, 0.96);
+  border: 2px solid rgba(120, 120, 150, 0.35);
+  border-radius: 16px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.theme-option:hover {
+  border-color: rgba(180, 180, 210, 0.6);
+  transform: translateY(-2px);
+}
+
+.theme-option.selected {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(25, 25, 40, 0.98);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.theme-option span {
+  font-size: 11px;
+  color: #b5b5c3;
+  font-weight: 500;
+}
+
+.theme-preview {
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-preview.midnight-glass {
+  background: radial-gradient(circle at top, #111 0, #000 55%, #050505 100%);
+}
+
+.theme-preview.deep-ocean {
+  background: radial-gradient(circle at top, #0a1628 0, #020814 55%, #000509 100%);
+}
+
+.theme-preview.cosmic-purple {
+  background: radial-gradient(circle at top, #1a0a28 0, #0a0214 55%, #050009 100%);
+}
+
+.theme-preview.forest-night {
+  background: radial-gradient(circle at top, #0a1a0f 0, #020a05 55%, #000502 100%);
+}
+
+.accent-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.accent-option {
+  background: rgba(15, 15, 25, 0.96);
+  border: 2px solid rgba(120, 120, 150, 0.35);
+  border-radius: 14px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accent-option:hover {
+  border-color: rgba(180, 180, 210, 0.6);
+  transform: scale(1.05);
+}
+
+.accent-option.selected {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(25, 25, 40, 0.98);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.accent-preview {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.accent-preview.blue {
+  background: linear-gradient(135deg, #5e7bff, #4a90ff);
+}
+
+.accent-preview.purple {
+  background: linear-gradient(135deg, #9b6bff, #c77dff);
+}
+
+.accent-preview.green {
+  background: linear-gradient(135deg, #3dd68c, #2eb878);
+}
+
+.accent-preview.pink {
+  background: linear-gradient(135deg, #ff6b9d, #ff8cb4);
+}
+
+/* Toggle switch */
+.toggle {
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(80, 80, 100, 0.4);
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.toggle.on {
+  background: linear-gradient(135deg, #5e7bff, #4a90ff);
+}
+
+.toggle-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: #ffffff;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle.on .toggle-thumb {
+  transform: translateX(22px);
 }
